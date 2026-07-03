@@ -7,7 +7,6 @@ UI designed in Figma — blue & white color scheme, clean and simple layout.
 ## Screenshots
 
 | Landing Page |
-|---|---|
 | ![Landing](./image/landing.png) |
 
 
