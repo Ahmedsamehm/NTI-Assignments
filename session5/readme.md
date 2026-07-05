@@ -1,18 +1,17 @@
 ## Design
-UI designed in Figma — blue & white color scheme, clean and simple layout.
+UI designed in Figma.
 [Figma link](https://www.figma.com/design/BLBx1dQMzn5PEBfXrGexpu/mini-LMS-platform)
 
 ---
 
 ## Screenshots
-
-| Landing Page |
-|---|---|
-| ![Landing](./screenshots/landing.png) |
+---
+![Landing](./image/landing.png) 
 
 
 
 
+---
 
 # Mini E-Learning Platform (LMS)
 
