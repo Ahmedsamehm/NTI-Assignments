@@ -12,7 +12,7 @@ const logger = {
     if (process.env.NODE_ENV !== 'production') {
       console.log(`[DEBUG] ${new Date().toISOString()}: ${message}`, ...meta);
     }
-  }
+  },
 };
 
 module.exports = logger;
