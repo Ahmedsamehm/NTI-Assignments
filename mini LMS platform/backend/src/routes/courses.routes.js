@@ -3,14 +3,7 @@ const router = express.Router();
 const authMiddleware = require('../middlewares/auth-middleware');
 const { authorize } = require('../middlewares/role-middleware');
 const Roles = require('../constants/roles');
-const {
-  getAllCourses,
-  createCourse,
-  deleteCourse,
-  getCourseById,
-  updateCourse,
-  getMyCourse,
-} = require('../controllers/courses.controller');
+const { getAllCourses, createCourse, deleteCourse, getCourseById, updateCourse, getMyCourse } = require('../controllers/courses.controller');
 const lessonRoutes = require('./lesson.routes');
 
 // /courses ,{GET,PATCH,DELETE} course:id , {POST} course ,

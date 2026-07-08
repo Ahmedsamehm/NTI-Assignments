@@ -21,6 +21,7 @@ const enroll = async (courseId, studentId) => {
   const enrollment = await Enrollment.create({
     student: studentId,
     course: courseId,
+    isPaidDemo: course.isPaid,
   });
 
   return enrollment;

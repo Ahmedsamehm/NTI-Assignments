@@ -3,14 +3,14 @@ const app = require('./app');
 const connectDB = require('./config/db');
 
 const PORT = process.env.PORT || 3000;
+const dns = require('dns');
 
+dns.setServers(['1.1.1.1', '8.8.8.8']);
 const startServer = async () => {
   await connectDB();
 
   app.listen(PORT, () => {
-    console.log(
-      `Server running on port ${PORT} in ${process.env.NODE_ENV} mode`
-    );
+    console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
   });
 };
 
