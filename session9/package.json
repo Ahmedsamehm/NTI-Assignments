@@ -1,0 +1,14 @@
+{
+  "name": "giglance-cli",
+  "version": "1.0.0",
+  "description": "Console-based Freelance Marketplace in TypeScript",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.1",
+    "@types/node": "^20.0.0"
+  }
+}
