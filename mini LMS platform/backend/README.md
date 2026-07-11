@@ -54,3 +54,16 @@ This is the Express-based backend API for the Mini Learning Management System (L
 - `isPaidDemo` (Boolean, Default: false)
 - *Enforces unique constraint on `(student, course)`*
 
+### Category Schema
+- `name` (String, Required, Unique)
+- `description` (String)
+
+## API Endpoints
+
+### Categories (`/api/v1/categories`)
+- `GET /` - Get all categories (Public, paginated, supports `search`, `sort`, and `order`)
+- `GET /:id` - Get a category by ID (Public)
+- `POST /` - Create a new category (Admin only)
+- `PATCH /:id` - Update a category (Admin only)
+- `DELETE /:id` - Delete a category (Admin only)
+
