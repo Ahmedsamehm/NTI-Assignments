@@ -35,8 +35,7 @@ const logout = async (req, res, next) => {
 const refresh_Token = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-    const { accessToken, _id, role } =
-      await authService.refreshToken(refreshToken);
+    const { accessToken, _id, role } = await authService.refreshToken(refreshToken);
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,

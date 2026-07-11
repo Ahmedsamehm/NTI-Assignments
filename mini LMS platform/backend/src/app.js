@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const ApiError = require('./utils/ApiError');
 const routes = require('./routes');
 const app = express();
@@ -16,9 +15,6 @@ app.use(express.json());
 // Parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
 
-// Enable CORS
-app.use(cors());
-
 // API Routes
 app.use('/api/v1/', routes);
 
@@ -26,6 +22,7 @@ app.use('/api/v1/', routes);
 app.use((req, res, next) => {
   next(new ApiError(404, `Path not found: ${req.originalUrl}`));
 });
+
 //error handling
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

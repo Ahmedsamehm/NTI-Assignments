@@ -1,0 +1,106 @@
+<div class="mx-auto w-full max-w-xl rounded-xl border bg-card text-card-foreground shadow">
+  <div class="flex flex-col space-y-1.5 p-6">
+    <h3 class="font-semibold leading-none tracking-tight">Register</h3>
+    <p class="text-sm text-muted-foreground">Create a new account</p>
+  </div>
+
+  <div class="p-6 pt-0">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <div class="space-y-2">
+        <label for="firstName" class="text-sm font-medium leading-none">First Name</label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="John"
+          class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        />
+        @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
+          <p class="text-sm font-medium text-destructive">First Name is required</p>
+        }
+      </div>
+
+      <div class="space-y-2">
+        <label for="email" class="text-sm font-medium leading-none">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="name@example.com"
+          class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        />
+        @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+          <p class="text-sm font-medium text-destructive">
+            @if (registerForm.get('email')?.errors?.['required']) {
+              Email is required
+            } @else if (registerForm.get('email')?.errors?.['email']) {
+              Please enter a valid email
+            }
+          </p>
+        }
+      </div>
+
+      <div class="space-y-2">
+        <label for="password" class="text-sm font-medium leading-none">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Create a password"
+          class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        />
+        @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+          <p class="text-sm font-medium text-destructive">
+            @if (registerForm.get('password')?.errors?.['required']) {
+              Password is required
+            } @else if (registerForm.get('password')?.errors?.['minlength']) {
+              Password must be at least 6 characters
+            }
+          </p>
+        }
+      </div>
+      <div class="space-y-2">
+        <label for="confirmPassword" class="text-sm font-medium leading-none"
+          >Confirm Password</label
+        >
+        <input
+          id="confirmPassword"
+          type="password"
+          formControlName="confirmPassword"
+          placeholder="Confirm password"
+          class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        />
+        @if (
+          (registerForm.get('confirmPassword')?.invalid || registerForm.hasError('mismatch')) &&
+          registerForm.get('confirmPassword')?.touched
+        ) {
+          <p class="text-sm font-medium text-destructive">
+            @if (registerForm.get('confirmPassword')?.errors?.['required']) {
+              Confirm Password is required
+            } @else if (registerForm.hasError('mismatch')) {
+              Confirm Password does not match Password
+            }
+          </p>
+        }
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="registerForm.invalid"
+        class="w-full bg-blue-700 hover:bg-blue-600 hover:text-white text-white disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+        hlmBtn
+        size="icon"
+        variant="outline"
+      >
+        Sign Up
+      </button>
+    </form>
+  </div>
+
+  <div class="flex items-center p-6 pt-0 justify-center">
+    <p class="text-sm text-muted-foreground">
+      Already have an account?
+      <a href="/login" class="text-primary hover:underline">Sign in</a>
+    </p>
+  </div>
+</div>

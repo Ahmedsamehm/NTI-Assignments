@@ -1,0 +1,56 @@
+<div class="flex min-h-screen w-full bg-slate-50/50 relative overflow-hidden">
+  <!-- Full-screen background dots -->
+  <div
+    class="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] opacity-[0.08] pointer-events-none"
+  ></div>
+
+  <!-- Back to Home Button -->
+  <a
+    routerLink="/"
+    class="absolute top-6 right-6 z-20 flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-slate-200/80 bg-white/90 backdrop-blur-md text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm"
+  >
+    <svg
+      class="w-3.5 h-3.5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2.5"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    </svg>
+    Back to Home
+  </a>
+
+  <!-- Left Side: Visual/Branding (Desktop Only) -->
+  <div
+    class="hidden lg:flex lg:w-1/2 relative bg-blue-50/10 p-12 flex-col justify-center overflow-hidden border-r border-slate-100/80"
+  >
+    <!-- Centered Illustration Image -->
+    <div
+      class="my-auto flex flex-col items-center justify-center z-10 relative w-full max-w-[540px] mx-auto"
+    >
+      <img
+        class="w-full h-auto object-contain rounded-2xl drop-shadow-xl hover:scale-[1.02] transition-transform duration-300"
+        src="/images/auth_study.jpg"
+        alt="Studying Illustration"
+      />
+
+      <!-- Small paragraph inside/on bottom left of the image -->
+      <div
+        class="absolute bottom-4 left-1 bg-white/90 backdrop-blur-md border border-slate-100/80 p-5 rounded-2xl shadow-lg max-w-[380px]"
+      >
+        <p class="text-slate-800 font-medium leading-relaxed text-xs">
+          "The beautiful thing about learning is that no one can take it away from you." Register
+          now to customize your learning paths, track progress, and unlock expert-level content.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side: Auth Form -->
+  <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative z-10">
+    <div class="w-full max-w-xl">
+      <app-register-form class="block w-full" />
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/spartan-ng/spartan/main/libs/cli/src/schema.json",
+  "project": "mini-lms",
+  "style": "nova",
+  "componentsPath": "src/app/shared/components/ui",
+  "tailwind": {
+    "config": "",
+    "css": "src/styles.css",
+    "prefix": "brn-"
+  },
+  "angular": {
+    "project": "mini-lms"
+  },
+  "brain": {
+    "prefix": "brn"
+  },
+  "helm": {
+    "prefix": "hlm"
+  }
+}

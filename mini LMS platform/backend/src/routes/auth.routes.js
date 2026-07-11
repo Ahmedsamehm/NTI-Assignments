@@ -8,7 +8,11 @@ router.post('/forget-password', authController.forgetPassword);
 router.post('/verify-otp', authController.verifyOtpCode);
 router.post('/reset-password', authController.resetPassword);
 router.post('/refresh', authController.refresh_Token);
+
 router.use(authMiddleware);
+router.get('/me', (req, res) => {
+  res.json(req.user);
+});
 router.post('/logout', authController.logout);
 
 module.exports = router;
