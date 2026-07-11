@@ -1,6 +1,7 @@
 const express = require('express');
 const ApiError = require('./utils/ApiError');
 const routes = require('./routes');
+const cors = require('cors');
 const app = express();
 const cookieParser = require('cookie-parser');
 
@@ -15,6 +16,15 @@ app.use(express.json());
 // Parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
 
+app.use(
+  cors({
+    origin: '*',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    exposedHeaders: ['Content-Length', 'Content-Range'],
+  })
+);
 // API Routes
 app.use('/api/v1/', routes);
 
