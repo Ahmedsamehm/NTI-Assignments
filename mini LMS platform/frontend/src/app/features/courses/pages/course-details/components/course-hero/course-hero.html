@@ -83,7 +83,7 @@
           </div>
 
           <!-- Enroll Button using hlmBtn -->
-          @if (isEnrolled()) {
+          @if (isEnrolled() || isOwner()) {
             <button
               hlmBtn
               disabled
@@ -92,7 +92,7 @@
               <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-              <span>Enrolled (Active Course)</span>
+              <span>{{ isOwner() ? 'Instructor Access' : 'Enrolled (Active Course)' }}</span>
             </button>
           } @else {
             <button

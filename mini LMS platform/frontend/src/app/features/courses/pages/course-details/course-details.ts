@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Header } from '../../../../shared/components/header/header';
@@ -9,6 +9,7 @@ import { HlmButtonImports } from '../../../../shared/components/ui/button/src';
 import { HlmAvatarImports } from '../../../../shared/components/ui/avatar/src';
 import { HlmSeparatorImports } from '../../../../shared/components/ui/separator/src';
 import { CoursesService } from '../../services/courses.service';
+import { AuthService } from '../../../auth/services/auth.service';
 import { CourseHeroComponent } from './components/course-hero/course-hero';
 import { CourseSyllabusComponent } from './components/course-syllabus/course-syllabus';
 import { CourseSidebarComponent } from './components/course-sidebar/course-sidebar';
@@ -53,8 +54,16 @@ interface SyllabusModule {
   templateUrl: './course-details.html',
 })
 export class CourseDetailsComponent implements OnInit {
+  private readonly authService = inject(AuthService);
   courseId: string | null = null;
   isEnrolled = signal<boolean>(false);
+  isOwner = computed(() => {
+    const details = this.courseDetails();
+    const user = this.authService.user();
+    if (!details || !user) return false;
+    const currentUserId = user._id || user.id;
+    return details.instructor?.id === currentUserId;
+  });
   enrollmentId = signal<string | null>(null);
   completedLessonIds = signal<string[]>([]);
 
@@ -158,18 +167,22 @@ export class CourseDetailsComponent implements OnInit {
               : '$0.00',
           image: '/images/hero_student.png',
           instructor: {
+            _id: apiCourse.instructor?._id || apiCourse.instructor?.id || apiCourse.instructor,
             name: apiCourse.instructor?.name || 'Instructor',
-            role: 'Senior Instructor',
-            avatar: '/images/student1.png',
+            email: apiCourse.instructor?.email || '',
           },
         });
 
         if (apiCourse.lessons && apiCourse.lessons.length > 0) {
           const mappedLessons = apiCourse.lessons.map((lesson: any, index: number) => {
             const isCompleted = this.completedLessonIds().includes(lesson._id || lesson.id);
-            // First lesson is unlocked for preview if course is paid and user is not enrolled.
-            // If course is free, lessons are unlocked by default on the backend, but we'll lock them if they are not enrolled to force enrollment click as requested.
-            const isLocked = !this.isEnrolled();
+            const currentUserId = this.authService.user()?._id || this.authService.user()?.id;
+            const isOwner =
+              (apiCourse.instructor as any) === currentUserId ||
+              apiCourse.instructor?._id === currentUserId ||
+              apiCourse.instructor?.id === currentUserId;
+            const isAdmin = this.authService.user()?.role === 'admin';
+            const isLocked = !this.isEnrolled() && !isOwner && !isAdmin;
 
             return {
               id: lesson._id || lesson.id,

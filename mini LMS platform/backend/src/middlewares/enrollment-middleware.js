@@ -10,6 +10,10 @@ const checkEnrollment = async (req, res, next) => {
       return next(new ApiError(404, 'Course not found'));
     }
 
+    if (req.user.role === 'admin' || (course.instructor && course.instructor.toString() === req.user._id.toString())) {
+      return next();
+    }
+
     if (!course.isPaid) {
       return next();
     }

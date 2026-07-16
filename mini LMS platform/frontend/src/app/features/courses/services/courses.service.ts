@@ -80,6 +80,22 @@ export class CoursesService {
     return this.http.delete<ApiResponse<null>>(`${environment.apiUrl}/categories/${id}`);
   }
 
+  getLessons(courseId: string) {
+    return this.http.get<ApiResponse<any[]>>(`${environment.apiUrl}/courses/${courseId}/lessons`);
+  }
+
+  createLesson(courseId: string, data: { title: string; content?: string; videoUrl?: string }) {
+    return this.http.post<ApiResponse<any>>(`${environment.apiUrl}/courses/${courseId}/lessons`, data);
+  }
+
+  updateLesson(courseId: string, lessonId: string, data: { title?: string; content?: string; videoUrl?: string }) {
+    return this.http.patch<ApiResponse<any>>(`${environment.apiUrl}/courses/${courseId}/lessons/${lessonId}`, data);
+  }
+
+  deleteLesson(courseId: string, lessonId: string) {
+    return this.http.delete<ApiResponse<null>>(`${environment.apiUrl}/courses/${courseId}/lessons/${lessonId}`);
+  }
+
   searchCourses(query: string) {
     return this.http
       .get<ApiResponse<Course[]>>(`${environment.apiUrl}/search/courses`, {

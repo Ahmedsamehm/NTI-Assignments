@@ -1,7 +1,8 @@
 import { Course } from './course';
 
 export interface Instructor {
-  id: number;
+  _id?: string;
+  id?: string;
   name: string;
   email: string;
 }

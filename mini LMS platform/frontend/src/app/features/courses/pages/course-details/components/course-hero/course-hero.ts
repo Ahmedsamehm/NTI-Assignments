@@ -14,6 +14,7 @@ import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
 export class CourseHeroComponent {
   courseDetails = input.required<any>();
   isEnrolled = input<boolean>(false);
+  isOwner = input<boolean>(false);
   enroll = output<void>();
 
   handleImageError(event: Event) {
