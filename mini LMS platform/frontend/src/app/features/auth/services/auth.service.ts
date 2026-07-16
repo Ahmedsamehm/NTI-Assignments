@@ -5,7 +5,7 @@ import { LoginRequest } from '../interfaces/login-request';
 import { RegisterRequest } from '../interfaces/register-request';
 import { User } from '../interfaces/user';
 import { Response_login } from '../interfaces/Response';
-import { catchError, of, switchMap, tap } from 'rxjs';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -35,5 +35,15 @@ export class AuthService {
     return this.http
       .post(`${environment.apiUrl}/auth/logout`, {})
       .pipe(tap(() => this.user.set(null)));
+  }
+
+  refreshToken() {
+    return this.http.post<any>(`${environment.apiUrl}/auth/refresh`, {}).pipe(
+      tap((res) => {
+        if (res && res.data) {
+          this.user.set(res.data);
+        }
+      }),
+    );
   }
 }

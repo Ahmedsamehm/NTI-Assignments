@@ -1,0 +1,542 @@
+<main class="px-5 md:px-8 py-8 flex flex-col gap-8 max-w-7xl w-full mx-auto">
+
+  
+  <div>
+    <p class="text-xs font-bold text-red-500 uppercase tracking-widest mb-1">Admin Panel</p>
+    <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-1">
+      Control Center
+    </h1>
+    <p class="text-slate-500 text-sm font-medium">Full platform management — Users, Courses, and Categories.</p>
+  </div>
+
+  
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+    
+    <div class="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-blue-300 transition-colors" (click)="setTab('users')">
+      <div>
+        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">Total Users</p>
+        <p class="text-3xl font-black text-slate-900">{{ totalUsers() }}</p>
+      </div>
+      <div class="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      </div>
+    </div>
+    
+    <div class="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-indigo-300 transition-colors" (click)="setTab('courses')">
+      <div>
+        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">Total Courses</p>
+        <p class="text-3xl font-black text-slate-900">{{ totalCourses() }}</p>
+      </div>
+      <div class="w-11 h-11 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      </div>
+    </div>
+    
+    <div class="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-emerald-300 transition-colors" (click)="setTab('categories')">
+      <div>
+        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">Categories</p>
+        <p class="text-3xl font-black text-slate-900">{{ totalCategories() }}</p>
+      </div>
+      <div class="w-11 h-11 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+
+    
+    <div class="flex border-b border-slate-200">
+      <button
+        (click)="setTab('users')"
+        class="flex items-center gap-2 px-6 py-4 text-sm font-bold transition-colors border-b-2 cursor-pointer bg-transparent"
+        [class.border-blue-600]="activeTab() === 'users'"
+        [class.text-blue-600]="activeTab() === 'users'"
+        [class.border-transparent]="activeTab() !== 'users'"
+        [class.text-slate-500]="activeTab() !== 'users'"
+        [class.hover:text-slate-800]="activeTab() !== 'users'"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        Users
+      </button>
+      <button
+        (click)="setTab('courses')"
+        class="flex items-center gap-2 px-6 py-4 text-sm font-bold transition-colors border-b-2 cursor-pointer bg-transparent"
+        [class.border-blue-600]="activeTab() === 'courses'"
+        [class.text-blue-600]="activeTab() === 'courses'"
+        [class.border-transparent]="activeTab() !== 'courses'"
+        [class.text-slate-500]="activeTab() !== 'courses'"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+        Courses
+      </button>
+      <button
+        (click)="setTab('categories')"
+        class="flex items-center gap-2 px-6 py-4 text-sm font-bold transition-colors border-b-2 cursor-pointer bg-transparent"
+        [class.border-blue-600]="activeTab() === 'categories'"
+        [class.text-blue-600]="activeTab() === 'categories'"
+        [class.border-transparent]="activeTab() !== 'categories'"
+        [class.text-slate-500]="activeTab() !== 'categories'"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+        </svg>
+        Categories
+      </button>
+    </div>
+
+    
+    @if (activeTab() === 'users') {
+      <div class="p-6 flex flex-col gap-5">
+        
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-extrabold text-slate-900">All Users</h2>
+          <button
+            (click)="openCreateUser()"
+            class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition-colors cursor-pointer border-none"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Create User
+          </button>
+        </div>
+
+        @if (usersLoading()) {
+          <div class="flex justify-center py-12">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          </div>
+        } @else if (users().length === 0) {
+          <div class="text-center py-12 text-slate-400">
+            <p class="font-semibold">No users found.</p>
+          </div>
+        } @else {
+          
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-sm">
+              <thead class="bg-slate-50 border-b border-slate-200">
+                <tr>
+                  <th class="text-left px-5 py-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">User</th>
+                  <th class="text-left px-5 py-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Role</th>
+                  <th class="text-left px-5 py-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest hidden md:table-cell">Joined</th>
+                  <th class="text-right px-5 py-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                @for (user of users(); track user._id) {
+                  <tr class="hover:bg-slate-50 transition-colors">
+                    
+                    <td class="px-5 py-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-extrabold text-sm shrink-0">
+                          {{ user.name.charAt(0).toUpperCase() }}
+                        </div>
+                        <div>
+                          <p class="font-bold text-slate-900 text-sm">{{ user.name }}</p>
+                          <p class="text-xs text-slate-400 font-medium">{{ user.email }}</p>
+                        </div>
+                      </div>
+                    </td>
+                    
+                    <td class="px-5 py-4">
+                      <span class="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide" [class]="getRoleBadgeClass(user.role)">
+                        {{ user.role }}
+                      </span>
+                    </td>
+                    
+                    <td class="px-5 py-4 text-xs text-slate-400 font-medium hidden md:table-cell">
+                      {{ user.createdAt | date:'mediumDate' }}
+                    </td>
+                    
+                    <td class="px-5 py-4">
+                      <div class="flex items-center justify-end gap-2">
+                        <button
+                          (click)="openEditUser(user)"
+                          class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors border-none bg-transparent cursor-pointer"
+                          title="Edit user"
+                        >
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                        </button>
+                        <button
+                          (click)="askDeleteUser(user._id)"
+                          class="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600 transition-colors border-none bg-transparent cursor-pointer"
+                          title="Delete user"
+                        >
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    }
+
+    
+    @if (activeTab() === 'courses') {
+      <div class="p-6 flex flex-col gap-5">
+        
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-extrabold text-slate-900">All Courses</h2>
+          <button
+            (click)="openCreateCourse()"
+            class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition-colors cursor-pointer border-none"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Create Course
+          </button>
+        </div>
+
+        @if (coursesLoading()) {
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            @for (_ of [1, 2, 3]; track $index) {
+              <div class="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden animate-pulse">
+                <div class="h-36 bg-slate-200"></div>
+                <div class="p-4 space-y-2">
+                  <div class="h-3 bg-slate-200 rounded w-3/4"></div>
+                  <div class="h-3 bg-slate-200 rounded w-1/2"></div>
+                </div>
+              </div>
+            }
+          </div>
+        } @else if (courses().length === 0) {
+          <div class="text-center py-12 text-slate-400">
+            <p class="font-semibold">No courses found.</p>
+          </div>
+        } @else {
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            @for (course of courses(); track course._id) {
+              <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col">
+                
+                <div class="relative w-full h-36 overflow-hidden bg-slate-100">
+                  @if (course.thumbnail || course.image) {
+                    <img
+                      [src]="course.thumbnail || course.image"
+                      (error)="handleImageError($event)"
+                      [alt]="course.title"
+                      class="w-full h-full object-cover"
+                    />
+                  } @else {
+                    <div class="w-full h-full bg-gradient-to-tr from-blue-600 to-indigo-400 flex items-center justify-center">
+                      <svg class="w-10 h-10 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  }
+                  <span
+                    class="absolute top-2.5 left-2.5 text-[10px] font-bold px-2 py-0.5 rounded-full"
+                    [class.bg-emerald-100]="course.isPaid"
+                    [class.text-emerald-700]="course.isPaid"
+                    [class.bg-slate-100]="!course.isPaid"
+                    [class.text-slate-600]="!course.isPaid"
+                  >
+                    {{ course.isPaid ? '$' + course.price : 'Free' }}
+                  </span>
+                </div>
+                
+                <div class="p-4 flex flex-col flex-1">
+                  @if (course.category) {
+                    <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1">{{ course.category }}</span>
+                  }
+                  <h3 class="text-sm font-extrabold text-slate-900 line-clamp-1 leading-snug flex-1">{{ course.title }}</h3>
+                  @if (course.instructor?.name) {
+                    <p class="text-xs text-slate-400 mt-1 font-medium">By {{ course.instructor.name }}</p>
+                  }
+                  
+                  <div class="flex gap-2 mt-3 pt-3 border-t border-slate-100">
+                    <button
+                      (click)="openEditCourse(course)"
+                      class="flex-1 flex items-center justify-center gap-1.5 border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold py-2 rounded-xl text-xs transition-all cursor-pointer bg-white"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                      Edit
+                    </button>
+                    <button
+                      (click)="askDeleteCourse(course._id)"
+                      class="flex-1 flex items-center justify-center gap-1.5 border border-red-100 text-red-600 hover:bg-red-50 font-bold py-2 rounded-xl text-xs transition-all cursor-pointer bg-white"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    
+    @if (activeTab() === 'categories') {
+      <div class="p-6 flex flex-col gap-5">
+        
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-extrabold text-slate-900">All Categories</h2>
+          <button
+            (click)="openCreateCategory()"
+            class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition-colors cursor-pointer border-none"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Create Category
+          </button>
+        </div>
+
+        @if (categoriesLoading()) {
+          <div class="flex justify-center py-12">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          </div>
+        } @else if (categories().length === 0) {
+          <div class="text-center py-12 text-slate-400">
+            <p class="font-semibold">No categories found.</p>
+          </div>
+        } @else {
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-sm">
+              <thead class="bg-slate-50 border-b border-slate-200">
+                <tr>
+                  <th class="text-left px-5 py-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Name</th>
+                  <th class="text-left px-5 py-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest hidden md:table-cell">Description</th>
+                  <th class="text-right px-5 py-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                @for (cat of categories(); track cat._id) {
+                  <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-5 py-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                          </svg>
+                        </div>
+                        <span class="font-bold text-slate-900">{{ cat.name }}</span>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4 text-xs text-slate-400 font-medium hidden md:table-cell max-w-xs truncate">
+                      {{ cat.description || '—' }}
+                    </td>
+                    <td class="px-5 py-4">
+                      <div class="flex items-center justify-end gap-2">
+                        <button
+                          (click)="openEditCategory(cat)"
+                          class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors border-none bg-transparent cursor-pointer"
+                        >
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        </button>
+                        <button
+                          (click)="askDeleteCategory(cat._id)"
+                          class="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600 transition-colors border-none bg-transparent cursor-pointer"
+                        >
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+</main>
+
+
+@if (showUserModal()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/75 backdrop-blur-md">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden">
+      
+      <div class="flex items-center justify-between px-8 pt-8 pb-6 border-b border-slate-100">
+        <div>
+          <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest block mb-1">
+            {{ editingUser() ? 'Edit User' : 'New User' }}
+          </span>
+          <h2 class="text-xl font-black text-slate-900">
+            {{ editingUser() ? 'Update User' : 'Create a User' }}
+          </h2>
+        </div>
+        <button (click)="closeUserModal()" class="p-2 rounded-full hover:bg-slate-100 text-slate-400 border-none bg-transparent cursor-pointer">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+      
+      <div class="px-8 py-6 space-y-4">
+        
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1.5">Full Name <span class="text-red-500">*</span></label>
+          <input type="text" [ngModel]="userForm().name" (ngModelChange)="userForm.update(f => ({...f, name: $event}))"
+            placeholder="e.g. John Doe"
+            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+        </div>
+        
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1.5">Email <span class="text-red-500">*</span></label>
+          <input type="email" [ngModel]="userForm().email" (ngModelChange)="userForm.update(f => ({...f, email: $event}))"
+            placeholder="e.g. john@example.com"
+            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+        </div>
+        
+        @if (!editingUser()) {
+          <div>
+            <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1.5">Password <span class="text-red-500">*</span></label>
+            <input type="password" [ngModel]="userForm().password" (ngModelChange)="userForm.update(f => ({...f, password: $event}))"
+              placeholder="Min. 8 characters"
+              class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+          </div>
+        }
+        
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1.5">Role <span class="text-red-500">*</span></label>
+          <div class="relative">
+            <select [ngModel]="userForm().role" (ngModelChange)="userForm.update(f => ({...f, role: $event}))"
+              class="w-full appearance-none border border-slate-200 rounded-xl px-4 py-2.5 pr-10 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer">
+              <option value="student">Student</option>
+              <option value="instructor">Instructor</option>
+              <option value="admin">Admin</option>
+            </select>
+            <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="px-8 pb-8 pt-2 flex gap-3">
+        <button
+          (click)="saveUser()"
+          [disabled]="userSaving() || !userForm().name.trim() || !userForm().email.trim()"
+          class="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl text-sm transition-colors cursor-pointer border-none"
+        >
+          @if (userSaving()) { Saving... } @else { {{ editingUser() ? 'Save Changes' : 'Create User' }} }
+        </button>
+        <button (click)="closeUserModal()" class="flex-1 bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 font-bold py-3 rounded-xl text-sm transition-colors cursor-pointer">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+
+@if (showCourseModal()) {
+  <app-course-form-modal
+    [course]="editingCourse()"
+    (save)="onSaveCourse($event)"
+    (cancel)="closeCourseModal()"
+  />
+}
+
+
+@if (showCategoryModal()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/75 backdrop-blur-md">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden">
+      <div class="flex items-center justify-between px-8 pt-8 pb-6 border-b border-slate-100">
+        <div>
+          <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest block mb-1">
+            {{ editingCategory() ? 'Edit Category' : 'New Category' }}
+          </span>
+          <h2 class="text-xl font-black text-slate-900">
+            {{ editingCategory() ? 'Update Category' : 'Create Category' }}
+          </h2>
+        </div>
+        <button (click)="closeCategoryModal()" class="p-2 rounded-full hover:bg-slate-100 text-slate-400 border-none bg-transparent cursor-pointer">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+      <div class="px-8 py-6 space-y-4">
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1.5">Name <span class="text-red-500">*</span></label>
+          <input type="text" [ngModel]="categoryForm().name" (ngModelChange)="categoryForm.update(f => ({...f, name: $event}))"
+            placeholder="e.g. Web Development"
+            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all" />
+        </div>
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1.5">Description</label>
+          <textarea [ngModel]="categoryForm().description" (ngModelChange)="categoryForm.update(f => ({...f, description: $event}))"
+            placeholder="Brief description of this category..."
+            rows="3"
+            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all resize-none"></textarea>
+        </div>
+      </div>
+      <div class="px-8 pb-8 pt-2 flex gap-3">
+        <button
+          (click)="saveCategory()"
+          [disabled]="categorySaving() || !categoryForm().name.trim()"
+          class="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl text-sm transition-colors cursor-pointer border-none"
+        >
+          @if (categorySaving()) { Saving... } @else { {{ editingCategory() ? 'Save Changes' : 'Create Category' }} }
+        </button>
+        <button (click)="closeCategoryModal()" class="flex-1 bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 font-bold py-3 rounded-xl text-sm transition-colors cursor-pointer">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+
+@if (confirmDeleteUserId() || confirmDeleteCourseId() || confirmDeleteCategoryId()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/75 backdrop-blur-md">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-sm w-full p-8 text-center">
+      <div class="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-5">
+        <svg class="w-7 h-7 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+      </div>
+      <h3 class="text-lg font-black text-slate-900 mb-2">
+        Delete {{ confirmDeleteUserId() ? 'User' : confirmDeleteCourseId() ? 'Course' : 'Category' }}?
+      </h3>
+      <p class="text-sm text-slate-500 mb-7 leading-relaxed">
+        This action is permanent and cannot be undone.
+      </p>
+      <div class="flex gap-3">
+        <button
+          (click)="confirmDeleteUserId() ? confirmDeleteUser() : confirmDeleteCourseId() ? confirmDeleteCourse() : confirmDeleteCategory()"
+          [disabled]="userDeleting() || courseDeleting() || categoryDeleting()"
+          class="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white font-bold py-3 rounded-xl text-sm transition-colors cursor-pointer border-none"
+        >
+          @if (userDeleting() || courseDeleting() || categoryDeleting()) {
+            <span class="flex items-center justify-center gap-2">
+              <span class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+              Deleting...
+            </span>
+          } @else {
+            Yes, Delete
+          }
+        </button>
+        <button
+          (click)="cancelDeleteUser(); cancelDeleteCourse(); cancelDeleteCategory()"
+          class="flex-1 border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold py-3 rounded-xl text-sm transition-colors cursor-pointer bg-white"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+}
+

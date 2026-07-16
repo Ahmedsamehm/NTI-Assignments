@@ -67,6 +67,7 @@ const getCourses = async (queryParams) => {
   const { data, meta } = await usePagination(req, Course, {
     query,
     sort: sortOptions,
+    populate: { path: 'instructor', select: 'name email' },
   });
 
   return { data, meta };
@@ -82,12 +83,13 @@ const getMyCourse = async (queryParams) => {
   const { data, meta } = await usePagination(req, Course, {
     query,
     sort: sortOptions,
+    populate: { path: 'instructor', select: 'name email' },
   });
 
   return { data, meta };
 };
 const getCourseById = async (id) => {
-  const course = await Course.findById(id);
+  const course = await Course.findById(id).populate('instructor', 'name email').populate('lessons');
   if (!course) {
     throw new ApiError(404, 'Course not found');
   }
@@ -101,10 +103,7 @@ const createCourse = async (courseData) => {
 
   if (user.role === ROLES.ADMIN) {
     if (!body.instructor) {
-      throw new ApiError(
-        400,
-        'Instructor ID is required to create a course as an admin'
-      );
+      throw new ApiError(400, 'Instructor ID is required to create a course as an admin');
     }
     instructorId = body.instructor;
   } else if (user.role === ROLES.INSTRUCTOR) {
@@ -130,10 +129,7 @@ const updateCourse = async (req) => {
     throw new ApiError(404, 'Course not found');
   }
 
-  if (
-    getCourse.instructor?.toString() !== _id.toString() &&
-    role !== ROLES.ADMIN
-  ) {
+  if (getCourse.instructor?.toString() !== _id.toString() && role !== ROLES.ADMIN) {
     throw new ApiError(403, 'Not allowed to update this course');
   }
 
@@ -154,10 +150,7 @@ const deleteCourse = async (req) => {
     throw new ApiError(404, 'Course not found');
   }
 
-  if (
-    getCourse.instructor?.toString() !== _id.toString() &&
-    role !== ROLES.ADMIN
-  ) {
+  if (getCourse.instructor?.toString() !== _id.toString() && role !== ROLES.ADMIN) {
     throw new ApiError(403, 'Not allowed to delete this course');
   }
 

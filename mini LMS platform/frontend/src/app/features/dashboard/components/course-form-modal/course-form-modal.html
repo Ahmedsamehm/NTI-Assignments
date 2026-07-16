@@ -1,0 +1,168 @@
+
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/75 backdrop-blur-md">
+  <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in fade-in-50 zoom-in-95 duration-200">
+
+    
+    <div class="flex items-center justify-between px-8 pt-8 pb-6 border-b border-slate-100">
+      <div>
+        <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest block mb-1">
+          {{ isEditMode ? 'Edit Course' : 'New Course' }}
+        </span>
+        <h2 class="text-xl font-black text-slate-900">
+          {{ isEditMode ? 'Update Course Details' : 'Create a New Course' }}
+        </h2>
+      </div>
+      <button
+        (click)="cancel.emit()"
+        class="p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors border-none bg-transparent cursor-pointer"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    
+    <div class="px-8 py-6 space-y-5 max-h-[65vh] overflow-y-auto">
+
+      
+      <div>
+        <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1.5">
+          Course Title <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          [ngModel]="title()"
+          (ngModelChange)="title.set($event)"
+          placeholder="e.g. Advanced React Patterns"
+          class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+        />
+      </div>
+
+      
+      <div>
+        <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1.5">
+          Description <span class="text-red-500">*</span>
+        </label>
+        <textarea
+          [ngModel]="description()"
+          (ngModelChange)="description.set($event)"
+          placeholder="Describe what students will learn..."
+          rows="3"
+          class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+        ></textarea>
+      </div>
+
+      
+      <div>
+        <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1.5">
+          Category <span class="text-red-500">*</span>
+        </label>
+
+        @if (isCategoriesLoading()) {
+          
+          <div class="w-full border border-slate-200 rounded-xl px-4 py-2.5 bg-slate-50 flex items-center gap-2">
+            <span class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500 shrink-0"></span>
+            <span class="text-sm text-slate-400 font-medium">Loading categories...</span>
+          </div>
+        } @else if (categories().length === 0) {
+          
+          <input
+            type="text"
+            [ngModel]="category()"
+            (ngModelChange)="category.set($event)"
+            placeholder="e.g. Web Development, Design, Data Science"
+            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          />
+        } @else {
+          
+          <div class="relative">
+            <select
+              [ngModel]="category()"
+              (ngModelChange)="category.set($event)"
+              class="w-full appearance-none border border-slate-200 rounded-xl px-4 py-2.5 pr-10 text-sm font-semibold bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer"
+              [class.text-slate-800]="category()"
+              [class.text-slate-400]="!category()"
+            >
+              <option value="" disabled>Select a category...</option>
+              @for (cat of categories(); track cat._id) {
+                <option [value]="cat.name">{{ cat.name }}</option>
+              }
+            </select>
+            
+            <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </div>
+
+          
+          @if (category()) {
+            <p class="mt-1.5 text-[11px] text-blue-600 font-semibold flex items-center gap-1">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+              Selected: {{ category() }}
+            </p>
+          }
+        }
+      </div>
+
+      
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2.5">
+          <button
+            type="button"
+            (click)="isPaid.set(!isPaid())"
+            class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+            [class.bg-blue-600]="isPaid()"
+            [class.bg-slate-200]="!isPaid()"
+          >
+            <span
+              class="pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow transform transition duration-200 ease-in-out"
+              [class.translate-x-4]="isPaid()"
+              [class.translate-x-0]="!isPaid()"
+            ></span>
+          </button>
+          <span class="text-xs font-bold text-slate-700">Paid Course</span>
+        </div>
+
+        @if (isPaid()) {
+          <div class="flex-1">
+            <div class="relative">
+              <span class="absolute inset-y-0 left-3 flex items-center text-slate-400 text-sm font-bold pointer-events-none">$</span>
+              <input
+                type="number"
+                min="0"
+                [ngModel]="price()"
+                (ngModelChange)="price.set($event)"
+                placeholder="0.00"
+                class="w-full border border-slate-200 rounded-xl pl-7 pr-4 py-2.5 text-sm font-semibold text-slate-800 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    
+    <div class="px-8 pb-8 pt-4 flex gap-3 border-t border-slate-100">
+      <button
+        (click)="onSave()"
+        [disabled]="!isValid"
+        class="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl text-sm transition-colors cursor-pointer border-none"
+      >
+        {{ isEditMode ? 'Save Changes' : 'Create Course' }}
+      </button>
+      <button
+        (click)="cancel.emit()"
+        class="flex-1 bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 font-bold py-3 rounded-xl text-sm transition-colors cursor-pointer"
+      >
+        Cancel
+      </button>
+    </div>
+
+  </div>
+</div>
+

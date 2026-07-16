@@ -1,21 +1,16 @@
 import { Routes } from '@angular/router';
-import { Main } from './shared/components/main/main';
 import { AUTH_ROUTES } from './features/auth/auth.routes';
-import { AuthGuard } from './features/auth/guards/Auth-guard';
 import { COURSES_ROUTES } from './features/courses/courses.routes';
+import { DASHBOARD_ROUTES } from './features/dashboard/dashboard.routes';
+import { HomeComponent } from './features/home/pages/home/home';
 
 export const routes: Routes = [
   ...AUTH_ROUTES,
   {
     path: '',
-    component: Main,
-    children: [
-      {
-        path: '',
-        loadComponent: () => import('./features/home/pages/home/home').then(m => m.HomeComponent),
-      },
-    ],
+    component: HomeComponent,
   },
   ...COURSES_ROUTES,
+  ...DASHBOARD_ROUTES,
 ];
 

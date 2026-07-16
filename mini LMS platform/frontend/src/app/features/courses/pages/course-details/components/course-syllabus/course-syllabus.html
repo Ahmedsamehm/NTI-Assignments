@@ -1,0 +1,140 @@
+<h2 class="text-lg font-bold text-slate-900 mb-6">Course Syllabus</h2>
+
+<div hlmSeparator class="bg-slate-200/60 mb-6 h-px"></div>
+
+<!-- Syllabus Accordion Items using Spartan UI Accordion -->
+@if (!syllabus() || syllabus().length === 0) {
+  <div
+    class="flex flex-col items-center justify-center p-12 text-center bg-slate-50/50 border border-dashed border-slate-200/80 rounded-2xl"
+  >
+    <div
+      class="w-12 h-12 rounded-full bg-slate-100/80 flex items-center justify-center text-slate-400 mb-4"
+    >
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+        />
+      </svg>
+    </div>
+    <h3 class="text-sm font-bold text-slate-800 mb-1">No lessons available yet</h3>
+    <p class="text-xs text-slate-500 max-w-xs leading-relaxed">
+      This course doesn't have any published lessons or syllabus modules yet. Check back later!
+    </p>
+  </div>
+} @else {
+  <hlm-accordion type="multiple" class="w-full space-y-4">
+    @for (module of syllabus(); track module.moduleNumber) {
+      <hlm-accordion-item
+        [isOpened]="module.moduleNumber === 1"
+        class="border border-slate-200/80 rounded-xl overflow-hidden bg-white block"
+      >
+        <hlm-accordion-trigger
+          [triggerClass]="'w-full flex items-center justify-between p-5 text-left bg-slate-50/50 hover:bg-slate-50 transition-colors border-none cursor-pointer hover:no-underline select-none'"
+        >
+          <div class="flex flex-col text-start">
+            <span class="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-1">
+              Module {{ module.moduleNumber }}
+            </span>
+            <h4 class="text-sm font-bold text-slate-900 leading-snug">
+              {{ module.title }}
+            </h4>
+          </div>
+          <div class="flex items-center gap-4 ml-auto mr-2">
+            <span class="text-xs text-slate-500 font-semibold">
+              {{ module.lessonsCount }} Lessons &bull; {{ module.duration }}
+            </span>
+          </div>
+        </hlm-accordion-trigger>
+
+        <hlm-accordion-content class="p-0">
+          <div class="divide-y divide-slate-100 border-t border-slate-100">
+            @for (lesson of module.lessons; track lesson.title) {
+              <div
+                (click)="onLessonSelect(lesson)"
+                [class.cursor-pointer]="!lesson.isLocked"
+                [class.hover:bg-blue-50/30]="!lesson.isLocked"
+                [class.cursor-not-allowed]="lesson.isLocked"
+                [class.opacity-60]="lesson.isLocked"
+                class="flex items-center justify-between p-4 pl-6 transition-colors"
+              >
+                <div class="flex items-center gap-3">
+                  <!-- Icon Indicator -->
+                  @if (lesson.isLocked) {
+                    <div
+                      class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-400"
+                    >
+                      <svg
+                        class="w-3.5 h-3.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                        />
+                      </svg>
+                    </div>
+                  } @else if (lesson.isCompleted) {
+                    <div
+                      class="w-7 h-7 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600"
+                    >
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="3"
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  } @else {
+                    <div
+                      class="w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center text-blue-600"
+                    >
+                      <svg class="w-3.5 h-3.5 fill-current ml-0.5" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  }
+
+                  <!-- Title -->
+                  <span
+                    class="text-xs font-semibold"
+                    [class.text-slate-800]="!lesson.isLocked && !lesson.isCompleted"
+                    [class.text-slate-400]="lesson.isCompleted"
+                    [class.line-through]="lesson.isCompleted"
+                    [class.text-slate-500]="lesson.isLocked"
+                  >
+                    {{ lesson.title }}
+                  </span>
+
+                  <!-- Preview Badge -->
+                  @if (lesson.hasPreview) {
+                    <span
+                      hlmBadge
+                      variant="secondary"
+                      class="bg-blue-50 text-blue-700 hover:bg-blue-50 border-none font-semibold text-[10px] px-2 py-0.5 rounded ml-2"
+                    >
+                      Preview
+                    </span>
+                  }
+                </div>
+
+                <!-- Duration -->
+                <span class="text-xs text-slate-500 font-medium">
+                  {{ lesson.duration }}
+                </span>
+              </div>
+            }
+          </div>
+        </hlm-accordion-content>
+      </hlm-accordion-item>
+    }
+  </hlm-accordion>
+}

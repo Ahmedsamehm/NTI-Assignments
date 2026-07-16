@@ -8,14 +8,16 @@ const lessonRoutes = require('./lesson.routes');
 
 // /courses ,{GET,PATCH,DELETE} course:id , {POST} course ,
 
+router.get('/', getAllCourses);
+
 router.use(authMiddleware);
 
-router.get('/', getAllCourses);
+// /my MUST come before /:id — otherwise Express captures "my" as the :id param
 router.get('/my', getMyCourse);
 router.post('/', authorize(Roles.ADMIN, Roles.INSTRUCTOR), createCourse);
 
-router.delete('/:id', authorize(Roles.ADMIN, Roles.INSTRUCTOR), deleteCourse);
 router.get('/:id', getCourseById);
+router.delete('/:id', authorize(Roles.ADMIN, Roles.INSTRUCTOR), deleteCourse);
 router.patch('/:id', authorize(Roles.ADMIN, Roles.INSTRUCTOR), updateCourse);
 
 router.use('/:courseId/lessons', lessonRoutes);

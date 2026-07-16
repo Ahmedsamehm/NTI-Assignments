@@ -30,222 +30,117 @@
     </a>
   </div>
 
-  <!-- Courses Grid using Spartan cards -->
+  <!-- Dynamic Courses Grid using Spartan cards -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    <!-- Card 1: UI/UX Masterclass -->
-    <div
-      hlmCard
-      class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col transition-all duration-300 hover:shadow-xl hover:border-slate-200 hover:-translate-y-1 group"
-    >
-      <!-- Card Image Header -->
-      <div class="relative h-48 w-full overflow-hidden bg-slate-100">
-        <img
-          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          src="/images/course_ui_ux.png"
-          alt="Complete UI/UX Masterclass"
-        />
+    @for (course of courses(); track course._id) {
+      <div
+        [routerLink]="['/courses', course._id]"
+        hlmCard
+        class="cursor-pointer bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col transition-all duration-300 hover:shadow-xl hover:border-slate-200 hover:-translate-y-1 group"
+      >
+        <!-- Card Image Header -->
+        <div class="relative h-48 w-full overflow-hidden bg-slate-100">
+          <img
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            [src]="course.thumbnail || course.image || '/images/hero_student.png'"
+            [alt]="course.title"
+            (error)="handleImageError($event)"
+          />
 
-        <!-- Rating badge inside image -->
-        <span
-          hlmBadge
-          class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-lg text-xs font-extrabold text-slate-800 shadow-sm flex items-center gap-1 border-none"
-        >
-          <svg class="w-3.5 h-3.5 text-amber-500 fill-current" viewBox="0 0 24 24">
-            <path
-              d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-            />
-          </svg>
-          5.0
-        </span>
-      </div>
-
-      <div hlmCardContent class="p-6 grow flex flex-col">
-        <!-- Labels using Spartan Badges -->
-        <div class="flex flex-wrap gap-2 mb-4">
+          <!-- Rating badge inside image -->
           <span
             hlmBadge
-            class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-600 border-none"
-            >Design</span
+            class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-lg text-xs font-extrabold text-slate-800 shadow-sm flex items-center gap-1 border-none"
           >
-          <span
-            hlmBadge
-            class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-50 text-slate-500 border-none"
-            >Beginner</span
-          >
+            <svg class="w-3.5 h-3.5 text-amber-500 fill-current" viewBox="0 0 24 24">
+              <path
+                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+              />
+            </svg>
+            {{ course.rating || 4.8 }}
+          </span>
         </div>
 
-        <h3
-          hlmCardTitle
-          class="font-extrabold text-slate-900 text-xl leading-tight mb-2 group-hover:text-blue-600 transition-colors"
-        >
-          Complete UI/UX Masterclass
-        </h3>
+        <div hlmCardContent class="p-6 grow flex flex-col justify-between">
+          <div>
+            <!-- Labels using Spartan Badges -->
+            <div class="flex flex-wrap gap-2 mb-4">
+              @if (course.category) {
+                <span
+                  hlmBadge
+                  class="px-2.5 py-0.5 rounded-full text-[11px] font-bold border-none"
+                  [class.bg-blue-50]="course.category === 'Data Science'"
+                  [class.text-blue-600]="course.category === 'Data Science'"
+                  [class.bg-purple-50]="course.category === 'Design'"
+                  [class.text-purple-600]="course.category === 'Design'"
+                  [class.bg-emerald-50]="
+                    course.category === 'Development' || course.category === 'Web Dev'
+                  "
+                  [class.text-emerald-600]="
+                    course.category === 'Development' || course.category === 'Web Dev'
+                  "
+                  [class.bg-slate-50]="
+                    course.category !== 'Data Science' &&
+                    course.category !== 'Design' &&
+                    course.category !== 'Development' &&
+                    course.category !== 'Web Dev'
+                  "
+                  [class.text-slate-600]="
+                    course.category !== 'Data Science' &&
+                    course.category !== 'Design' &&
+                    course.category !== 'Development' &&
+                    course.category !== 'Web Dev'
+                  "
+                  >{{ course.category }}</span
+                >
+              }
+              <span
+                hlmBadge
+                class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-50 text-slate-500 border-none"
+                >All Levels</span
+              >
+            </div>
 
-        <p hlmCardDescription class="text-slate-500 text-sm mb-6 leading-relaxed grow">
-          Learn to design beautiful, intuitive interfaces from scratch using Figma and modern design
-          principles.
-        </p>
+            <!-- Title with RouterLink -->
+            <a [routerLink]="['/courses', course._id]" class="block group/link">
+              <h3
+                hlmCardTitle
+                class="font-extrabold text-slate-900 text-lg leading-tight mb-2 group-hover/link:text-blue-600 transition-colors line-clamp-2"
+              >
+                {{ course.title }}
+              </h3>
+            </a>
 
-        <!-- Footer: Instructor & Price -->
-        <div
-          hlmCardFooter
-          class="flex items-center justify-between pt-4 border-t border-slate-100 mt-auto p-0 bg-transparent"
-        >
-          <div class="flex items-center gap-2.5">
-            <img
-              class="w-8 h-8 rounded-full object-cover border border-slate-100 shadow-sm"
-              src="/images/student1.png"
-              alt="Sarah J."
-            />
-            <span class="text-sm font-semibold text-slate-700">Sarah J.</span>
+            <p hlmCardDescription class="text-slate-500 text-sm mb-6 leading-relaxed line-clamp-3">
+              {{ course.description }}
+            </p>
           </div>
-          <span class="text-lg font-black text-blue-600">$49</span>
-        </div>
-      </div>
-    </div>
 
-    <!-- Card 2: Advanced React Patterns -->
-    <div
-      hlmCard
-      class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col transition-all duration-300 hover:shadow-xl hover:border-slate-200 hover:-translate-y-1 group"
-    >
-      <!-- Card Image Header -->
-      <div class="relative h-48 w-full overflow-hidden bg-slate-100">
-        <img
-          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          src="/images/course_react.png"
-          alt="Advanced React Patterns"
-        />
-
-        <!-- Rating badge inside image -->
-        <span
-          hlmBadge
-          class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-lg text-xs font-extrabold text-slate-800 shadow-sm flex items-center gap-1 border-none"
-        >
-          <svg class="w-3.5 h-3.5 text-amber-500 fill-current" viewBox="0 0 24 24">
-            <path
-              d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-            />
-          </svg>
-          4.9
-        </span>
-      </div>
-
-      <div hlmCardContent class="p-6 grow flex flex-col">
-        <!-- Labels using Spartan Badges -->
-        <div class="flex flex-wrap gap-2 mb-4">
-          <span
-            hlmBadge
-            class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border-none"
-            >Development</span
+          <!-- Footer: Instructor & Price -->
+          <div
+            hlmCardFooter
+            class="flex items-center justify-between pt-4 border-t border-slate-100 p-0 bg-transparent"
           >
-          <span
-            hlmBadge
-            class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-50 text-slate-500 border-none"
-            >Intermediate</span
-          >
-        </div>
-
-        <h3
-          hlmCardTitle
-          class="font-extrabold text-slate-900 text-xl leading-tight mb-2 group-hover:text-blue-600 transition-colors"
-        >
-          Advanced React Patterns
-        </h3>
-
-        <p hlmCardDescription class="text-slate-500 text-sm mb-6 leading-relaxed grow">
-          Master complex state management, custom hooks, and performance optimization in React
-          applications.
-        </p>
-
-        <!-- Footer: Instructor & Price -->
-        <div
-          hlmCardFooter
-          class="flex items-center justify-between pt-4 border-t border-slate-100 mt-auto p-0 bg-transparent"
-        >
-          <div class="flex items-center gap-2.5">
-            <img
-              class="w-8 h-8 rounded-full object-cover border border-slate-100 shadow-sm"
-              src="/images/student2.png"
-              alt="Marcus T."
-            />
-            <span class="text-sm font-semibold text-slate-700">Marcus T.</span>
+            <div class="flex items-center gap-2.5">
+              <div
+                class="w-8 h-8 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center font-bold text-blue-600 text-xs select-none"
+              >
+                {{ course.instructor?.name?.substring(0, 1) || 'I' }}
+              </div>
+              <span class="text-xs font-bold text-slate-700">
+                {{ course.instructor?.name || 'Instructor' }}
+              </span>
+            </div>
+            <span class="text-base font-black text-blue-600">
+              {{ course.isPaid ? '$' + course.price : 'Free' }}
+            </span>
           </div>
-          <span class="text-lg font-black text-blue-600">$79</span>
         </div>
       </div>
-    </div>
-
-    <!-- Card 3: Data Analytics Bootcamp -->
-    <div
-      hlmCard
-      class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col transition-all duration-300 hover:shadow-xl hover:border-slate-200 hover:-translate-y-1 group"
-    >
-      <!-- Card Image Header -->
-      <div class="relative h-48 w-full overflow-hidden bg-slate-100">
-        <img
-          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          src="/images/course_data.png"
-          alt="Data Analytics Bootcamp"
-        />
-
-        <!-- Rating badge inside image -->
-        <span
-          hlmBadge
-          class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-lg text-xs font-extrabold text-slate-800 shadow-sm flex items-center gap-1 border-none"
-        >
-          <svg class="w-3.5 h-3.5 text-amber-500 fill-current" viewBox="0 0 24 24">
-            <path
-              d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-            />
-          </svg>
-          4.8
-        </span>
+    } @empty {
+      <div class="col-span-full py-12 text-center text-slate-500 font-semibold text-sm">
+        No courses found. Seed the database to view top courses here.
       </div>
-
-      <div hlmCardContent class="p-6 grow flex flex-col">
-        <!-- Labels using Spartan Badges -->
-        <div class="flex flex-wrap gap-2 mb-4">
-          <span
-            hlmBadge
-            class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-600 border-none"
-            >Data Science</span
-          >
-          <span
-            hlmBadge
-            class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-50 text-slate-500 border-none"
-            >All Levels</span
-          >
-        </div>
-
-        <h3
-          hlmCardTitle
-          class="font-extrabold text-slate-900 text-xl leading-tight mb-2 group-hover:text-blue-600 transition-colors"
-        >
-          Data Analytics Bootcamp
-        </h3>
-
-        <p hlmCardDescription class="text-slate-500 text-sm mb-6 leading-relaxed grow">
-          From SQL to Python: A comprehensive guide to analyzing data and building predictive
-          models.
-        </p>
-
-        <!-- Footer: Instructor & Price -->
-        <div
-          hlmCardFooter
-          class="flex items-center justify-between pt-4 border-t border-slate-100 mt-auto p-0 bg-transparent"
-        >
-          <div class="flex items-center gap-2.5">
-            <img
-              class="w-8 h-8 rounded-full object-cover border border-slate-100 shadow-sm"
-              src="/images/student3.png"
-              alt="Dr. Chen"
-            />
-            <span class="text-sm font-semibold text-slate-700">Dr. Chen</span>
-          </div>
-          <span class="text-lg font-black text-blue-600">$99</span>
-        </div>
-      </div>
-    </div>
+    }
   </div>
 </section>

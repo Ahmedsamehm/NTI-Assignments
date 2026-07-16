@@ -1,1 +1,318 @@
-<p>course-details works!</p>
+<app-header />
+
+<main class="min-h-screen bg-white text-slate-800 relative">
+  <app-course-hero
+    [courseDetails]="courseDetails()"
+    [isEnrolled]="isEnrolled()"
+    (enroll)="enroll()"
+  />
+
+  <!-- Main Content Body -->
+  <div class="max-w-7xl mx-auto px-6 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Left Column: Syllabus -->
+    <div class="lg:col-span-7">
+      <app-course-syllabus
+        [syllabus]="syllabus()"
+        (selectLesson)="onLessonSelected($event)"
+      />
+    </div>
+
+    <!-- Right Column: Sidebar objectives & details -->
+    <div class="lg:col-span-5 space-y-6">
+      <app-course-sidebar />
+    </div>
+  </div>
+
+  <!-- Cinematic Lesson Player Modal -->
+  @if (showPlayer() && selectedLesson()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/85 backdrop-blur-md transition-all duration-300">
+      <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl overflow-hidden max-w-4xl w-full flex flex-col md:flex-row h-[90vh] md:h-auto max-h-[850px] animate-in fade-in-50 zoom-in-95 duration-200">
+
+        <!-- Left Pane: Video Player -->
+        <div class="w-full md:w-3/5 bg-black flex flex-col justify-center relative aspect-video md:aspect-auto">
+          <!-- Close button for mobile -->
+          <button
+            (click)="closePlayer()"
+            class="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white md:hidden transition-colors border-none cursor-pointer"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          @if (selectedLesson()?.videoUrl) {
+            <video
+              [src]="selectedLesson()?.videoUrl"
+              controls
+              autoplay
+              class="w-full h-full object-contain max-h-[500px]"
+            ></video>
+          } @else {
+            <div class="flex flex-col items-center justify-center h-full min-h-[300px] text-slate-500 p-8">
+              <svg class="w-16 h-16 text-slate-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span class="text-sm font-semibold">Video content not available</span>
+            </div>
+          }
+        </div>
+
+        <!-- Right Pane: Lesson Metadata & Action -->
+        <div class="w-full md:w-2/5 p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-slate-50/50">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span hlmBadge class="bg-blue-50 text-blue-700 font-bold border-none text-[10px] px-2.5 py-1 rounded-full uppercase">
+                Active Lesson
+              </span>
+              <button
+                (click)="closePlayer()"
+                class="hidden md:block p-1.5 rounded-full hover:bg-slate-200 text-slate-400 hover:text-slate-600 transition-colors border-none bg-transparent cursor-pointer"
+              >
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <h3 class="text-xl font-extrabold text-slate-900 leading-snug mb-3">
+              {{ selectedLesson()?.title }}
+            </h3>
+
+            <div hlmSeparator class="bg-slate-200/80 mb-4 h-px"></div>
+
+            <p class="text-sm text-slate-600 leading-relaxed font-medium mb-6 whitespace-pre-line">
+              {{ selectedLesson()?.content }}
+            </p>
+          </div>
+
+          <!-- Bottom Actions -->
+          <div class="space-y-3 pt-4 border-t border-slate-200">
+            @if (selectedLesson()?.isCompleted) {
+              <div class="flex items-center justify-center gap-2 p-3 bg-emerald-50 text-emerald-800 rounded-xl text-xs font-bold border border-emerald-100">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Lesson Completed</span>
+              </div>
+            } @else {
+              <button
+                hlmBtn
+                [disabled]="isUpdatingProgress()"
+                (click)="markLessonCompleted()"
+                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition-all cursor-pointer border-none flex items-center justify-center gap-2 text-xs h-auto"
+              >
+                @if (isUpdatingProgress()) {
+                  <span class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                  <span>Saving...</span>
+                } @else {
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Mark as Completed</span>
+                }
+              </button>
+            }
+
+            <button
+              hlmBtn
+              variant="outline"
+              (click)="closePlayer()"
+              class="w-full border border-slate-200 text-slate-600 hover:bg-slate-100 font-bold py-3 rounded-xl transition-all cursor-pointer text-xs bg-white h-auto"
+            >
+              Close Player
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  }
+
+  <!-- Secure Fake Checkout Dialog Modal -->
+  @if (showCheckoutModal()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md transition-all duration-300">
+      <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl overflow-hidden max-w-md w-full p-6 md:p-8 animate-in fade-in-50 zoom-in-95 duration-200">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest block mb-1">
+              Secure Checkout
+            </span>
+            <h3 class="text-lg font-extrabold text-slate-900">
+              Unlock Course Access
+            </h3>
+          </div>
+          <button 
+            (click)="closeCheckout()"
+            [disabled]="isProcessingPayment()"
+            class="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors border-none bg-transparent cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Course Summary -->
+        <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-4 mb-6 border border-slate-100">
+          <img 
+            [src]="courseDetails().image || '/images/hero_student.png'" 
+            class="w-16 h-12 object-cover rounded-lg bg-slate-200 shrink-0" 
+            alt="Course thumbnail"
+          />
+          <div class="overflow-hidden">
+            <h4 class="text-xs font-extrabold text-slate-900 truncate leading-snug">
+              {{ courseDetails().title }}
+            </h4>
+            <p class="text-[10px] font-semibold text-slate-500 mt-0.5">
+              By {{ courseDetails().instructor.name }}
+            </p>
+          </div>
+          <div class="ml-auto text-right shrink-0">
+            <span class="text-sm font-black text-slate-900">{{ courseDetails().price }}</span>
+          </div>
+        </div>
+
+        <!-- Fake Payment Info Form -->
+        <div class="space-y-4">
+          <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Fake Payment Details</h4>
+          
+          <div>
+            <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">Cardholder Name</label>
+            <input 
+              hlmInput 
+              type="text" 
+              [value]="cardHolder()"
+              class="w-full bg-slate-50/50 border border-slate-200/80 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none"
+              placeholder="Alex Newman"
+            />
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">Card Number</label>
+            <div class="relative">
+              <input 
+                hlmInput 
+                type="text" 
+                [value]="cardNumber()"
+                class="w-full bg-slate-50/50 border border-slate-200/80 rounded-xl pl-3 pr-10 py-2 text-xs font-semibold focus:outline-none"
+                placeholder="4242 4242 4242 4242"
+              />
+              <span class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-slate-400" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">Expiration</label>
+              <input 
+                hlmInput 
+                type="text" 
+                [value]="cardExpiry()"
+                class="w-full bg-slate-50/50 border border-slate-200/80 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none"
+                placeholder="12/28"
+              />
+            </div>
+            <div>
+              <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">CVV</label>
+              <input 
+                hlmInput 
+                type="password" 
+                [value]="cardCvv()"
+                class="w-full bg-slate-50/50 border border-slate-200/80 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none"
+                placeholder="123"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-col gap-2">
+          <button
+            hlmBtn
+            [disabled]="isProcessingPayment()"
+            (click)="processFakePayment()"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition-all cursor-pointer border-none flex items-center justify-center gap-2 text-xs h-auto"
+          >
+            @if (isProcessingPayment()) {
+              <span class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+              <span>Processing secure purchase...</span>
+            } @else {
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span>Pay & Enroll</span>
+            }
+          </button>
+          <button
+            hlmBtn
+            variant="outline"
+            [disabled]="isProcessingPayment()"
+            (click)="closeCheckout()"
+            class="w-full border border-slate-200 text-slate-500 hover:bg-slate-50 font-bold py-3 rounded-xl transition-all cursor-pointer text-xs bg-white h-auto disabled:opacity-50"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Purchase Success Dialog Modal -->
+  @if (showSuccessModal()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md transition-all duration-300">
+      <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl overflow-hidden max-w-sm w-full p-8 text-center animate-in fade-in-50 zoom-in-95 duration-200">
+        
+        <!-- Animated success checkmark -->
+        <div class="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-6">
+          <svg class="w-8 h-8 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+
+        <h3 class="text-xl font-black text-slate-900 mb-2">
+          Purchase Successful!
+        </h3>
+        
+        <p class="text-xs text-slate-500 font-medium leading-relaxed mb-6">
+          Congratulations! You are now enrolled in <strong>{{ courseDetails().title }}</strong>. The lessons have been unlocked for your learning account.
+        </p>
+
+        <button
+          hlmBtn
+          (click)="closeSuccessModal()"
+          class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl transition-all cursor-pointer border-none text-xs h-auto"
+        >
+          Start Learning Now
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Transient Toast Notification -->
+  @if (notification()) {
+    <div class="fixed bottom-6 right-6 z-[100] max-w-sm bg-white border border-slate-200/80 rounded-2xl shadow-xl p-4 flex items-center gap-3 animate-in slide-in-from-bottom-5 duration-300">
+      @if (notification()?.type === 'success') {
+        <div class="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+      } @else {
+        <div class="w-6 h-6 rounded-full bg-rose-50 flex items-center justify-center text-rose-600 shrink-0">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </div>
+      }
+      <span class="text-xs font-bold text-slate-800">{{ notification()?.message }}</span>
+    </div>
+  }
+</main>
+
+<app-footer />
