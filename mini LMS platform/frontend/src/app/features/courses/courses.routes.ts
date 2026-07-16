@@ -7,13 +7,13 @@ export const COURSES_ROUTES: Routes = [
   {
     path: 'courses',
     component: CoursesListComponent,
-    canActivate: [AuthGuard],
+
     title: 'Courses',
   },
   {
     path: 'courses/:id',
     component: CourseDetailsComponent,
-    canActivate: [AuthGuard],
+
     title: 'Course Details',
   },
 ];
