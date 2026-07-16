@@ -5,6 +5,6 @@ export const HOME_ROUTES: Routes = [
   {
     path: '',
     component: HomeComponent,
-    title: 'LuminaLearn - Unlock Your Potential',
+    title: 'mini lms - Unlock Your Potential',
   },
 ];
